@@ -7,6 +7,8 @@ import Courses from './components/Courses';
 import CourseDetails from './components/CourseDetails';
 import UpdateCourse from './components/UpdateCourseForm';
 import { api } from './utils/apiHelper';
+import UserSignIn from './components/UserSignIn';
+import UserSignUp from './components/UserSignUp';
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
         <Route path='/courses' element={<Courses courses={courses}/>}/>
         <Route path='/courses/:id' element={<CourseDetails courses={courses}/>}/>
         <Route path='/courses/:id/update' element={<UpdateCourse />}/>
+        <Route path='/signin' element={<UserSignIn />}></Route>
+        <Route path='/signup' element={<UserSignUp />}></Route>
       </Routes>
     </>
   )
