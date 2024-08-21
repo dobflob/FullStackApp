@@ -32,14 +32,14 @@ const UserSignUp = () => {
         await actions.signIn(user);
         navigate('/courses');
       } else if (response.status === 400) {
-        const data = await response.json();
-        setErrors(data.errors);
+          const data = await response.json();
+          setErrors(data.errors);
       } else {
-        throw new Error();
+          throw new Error();
       }
     } catch (error) {
-      console.log(error);
-      navigate('/signup');
+        console.log(error);
+        navigate('/signup');
     }
   }
 

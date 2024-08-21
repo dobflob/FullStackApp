@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Courses from './components/Courses';
 import CourseDetails from './components/CourseDetails';
 import UpdateCourse from './components/UpdateCourseForm';
+import CreateCourse from './components/CreateCourse';
 import { api } from './utils/apiHelper';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
@@ -36,11 +37,12 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate to='/courses'/>}/>
         <Route path='/courses' element={<Courses courses={courses}/>}/>
-        <Route path='/courses/:id' element={<CourseDetails courses={courses}/>}/>
+        <Route path='/courses/:id' element={<CourseDetails courses={courses} deleteCourse={setCourses}/>}/>
         <Route path='/courses/:id/update' element={<UpdateCourse />}/>
-        <Route path='/signin' element={<UserSignIn />}></Route>
-        <Route path='/signup' element={<UserSignUp />}></Route>
-        <Route path='/signout' element={<UserSignOut />}></Route>
+        <Route path='/createcourse' element={<CreateCourse courses={courses} addCourse={setCourses}/>} />
+        <Route path='/signin' element={<UserSignIn />} />
+        <Route path='/signup' element={<UserSignUp />} />
+        <Route path='/signout' element={<UserSignOut />} />
       </Routes>
     </>
   )

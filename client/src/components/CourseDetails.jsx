@@ -1,8 +1,13 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { api } from "../utils/apiHelper";
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
 
-const CourseDetails = ({courses}) => {
+const CourseDetails = ({courses, deleteCourse}) => {
+const navigate = useNavigate();
 const idString = useParams().id;
 const courseId = parseInt(idString);
+const user = useContext(UserContext);
 let descriptionKey = 0;
 let materialKey = 0;
 let materialList = [];
@@ -29,13 +34,36 @@ if (course.materialsNeeded) {
   });
 }
 
+const handleDelete = async (event) => {
+  event.preventDefault();
+
+  try {
+    const response = await api(`/courses/${course.id}`, 'DELETE', user);
+
+    if (response.status === 204) {
+      console.log(`${course.title} has been deleted`);
+      deleteCourse(courses.filter(course => course.id !== courseId));
+      navigate('/');
+    } else if (response.status === 400) {
+        const data = await response.json();
+        setErrors(data.errors);
+        const errorList = errors.map(err => <li>{err}</li>);
+        return errorList;
+    } else {
+        throw new Error();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
   return (
     <main>
       <div className='actions--bar'>
         <div className='wrap'>
           <Link className='button' to={`/courses/${course.id}/update`}>Update Course</Link>
-          <a className='button' href='#'>Delete Course</a>
-          <a className='button button-secondary' href='#'>Return to List</a>
+          <Link className='button' to='/courses' onClick={handleDelete}>Delete Course</Link>
+          <Link className='button button-secondary' to='/courses'>Return to List</Link>
         </div>
       </div>
       <div className='wrap'>
