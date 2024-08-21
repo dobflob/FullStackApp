@@ -21,9 +21,8 @@ const UserSignIn = () => {
 
     try {
       const user = await actions.signIn(credentials);
-
       if (user) {
-        navigate('/courses');
+        navigate('/');
       } else {
         setErrors(['Sign-in was unsuccessful'])
       }
@@ -43,14 +42,14 @@ const UserSignIn = () => {
       <div className='form--centered'>
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit}>
-          <label for='emailAddress'>Email Address</label>
-          <input id='emailAddress' name='emailAddress' type='email' value='' />
+          <label htmlFor='emailAddress'>Email Address</label>
+          <input id='emailAddress' name='emailAddress' type='email' ref={emailAddress}/>
 
-          <label for='password'>Password</label>
-          <input id='password' name='password' type='password' value='' />
+          <label htmlFor='password'>Password</label>
+          <input id='password' name='password' type='password' ref={password}/>
 
           <button className='button' type='submit'>Sign In</button>
-          <button className='button button-secondary' onclick={handleCancel}>Cancel</button>
+          <button className='button button-secondary' type='button' onClick={handleCancel}>Cancel</button>
         </form>
         <p>Don't have a user account? Click here to <Link to='/signup'>sign up</Link>.</p>
       </div>

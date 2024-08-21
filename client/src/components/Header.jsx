@@ -17,7 +17,7 @@ const Header = () => {
             </li>
             <li>Welcome, Jessie Dobson!</li>
             <li>
-              <a href='#'>Sign Out</a>
+              <Link to='/signout'>Sign Out</Link>
             </li>
           </ul>
         </nav>

@@ -9,6 +9,7 @@ import UpdateCourse from './components/UpdateCourseForm';
 import { api } from './utils/apiHelper';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
+import UserSignOut from './components/UserSignOut';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path='/courses/:id/update' element={<UpdateCourse />}/>
         <Route path='/signin' element={<UserSignIn />}></Route>
         <Route path='/signup' element={<UserSignUp />}></Route>
+        <Route path='/signout' element={<UserSignOut />}></Route>
       </Routes>
     </>
   )

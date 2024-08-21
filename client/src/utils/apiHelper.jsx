@@ -14,13 +14,11 @@ export const api = (
   if(body) {
     options.body = JSON.stringify(body);
     options.headers['Content-Type'] = 'application/json; charset=utf-8';
-    console.log('hello from body');
   }
 
   if(credentials) {
-    const encodedCredentials = btoa(`${credentials.username}:${credentials.password}`)
+    const encodedCredentials = btoa(`${credentials.emailAddress}:${credentials.password}`)
     options.headers.Authorization = `Basic ${encodedCredentials}`;
-    console.log('hello from credentials');
   }
 
   return fetch(url, options);
