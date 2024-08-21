@@ -38,7 +38,7 @@ function App() {
         <Route path='/' element={<Navigate to='/courses'/>}/>
         <Route path='/courses' element={<Courses courses={courses}/>}/>
         <Route path='/courses/:id' element={<CourseDetails courses={courses} deleteCourse={setCourses}/>}/>
-        <Route path='/courses/:id/update' element={<UpdateCourse />}/>
+        <Route path='/courses/:id/update' element={<UpdateCourse courses={courses} updateCourse={setCourses}/>}/>
         <Route path='/createcourse' element={<CreateCourse courses={courses} addCourse={setCourses}/>} />
         <Route path='/signin' element={<UserSignIn />} />
         <Route path='/signup' element={<UserSignUp />} />

@@ -49,6 +49,7 @@ const CreateCourse = ({courses, addCourse}) => {
 
   const handleCancel = (event) => {
     event.preventDefault();
+    navigate('/'); //want to change to use location so we can go back to where we came from
   }
 
   return (
