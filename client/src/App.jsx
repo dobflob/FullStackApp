@@ -11,6 +11,7 @@ import { api } from './utils/apiHelper';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import UserSignOut from './components/UserSignOut';
+import PrivateRoute from './components/PrivateRoute';
 
 
 function App() {
@@ -37,9 +38,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate to='/courses'/>}/>
         <Route path='/courses' element={<Courses courses={courses}/>}/>
-        <Route path='/courses/:id' element={<CourseDetails courses={courses} deleteCourse={setCourses}/>}/>
-        <Route path='/courses/:id/update' element={<UpdateCourse courses={courses} updateCourse={setCourses}/>}/>
-        <Route path='/createcourse' element={<CreateCourse courses={courses} addCourse={setCourses}/>} />
+        <Route element={<PrivateRoute />}>
+          <Route path='/courses/:id' element={<CourseDetails courses={courses} deleteCourse={setCourses}/>}/>
+          <Route path='/courses/:id/update' element={<UpdateCourse courses={courses} updateCourse={setCourses}/>}/>
+          <Route path='/createcourse' element={<CreateCourse courses={courses} addCourse={setCourses}/>} />
+        </Route>
         <Route path='/signin' element={<UserSignIn />} />
         <Route path='/signup' element={<UserSignUp />} />
         <Route path='/signout' element={<UserSignOut />} />

@@ -7,7 +7,7 @@ const CourseDetails = ({courses, deleteCourse}) => {
 const navigate = useNavigate();
 const idString = useParams().id;
 const courseId = parseInt(idString);
-const user = useContext(UserContext);
+const {authUser} = useContext(UserContext);
 let descriptionKey = 0;
 let materialKey = 0;
 let materialList = [];
@@ -38,7 +38,7 @@ const handleDelete = async (event) => {
   event.preventDefault();
 
   try {
-    const response = await api(`/courses/${course.id}`, 'DELETE', user);
+    const response = await api(`/courses/${course.id}`, 'DELETE', null, authUser);
 
     if (response.status === 204) {
       console.log(`${course.title} has been deleted`);

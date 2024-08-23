@@ -22,7 +22,7 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
 router.post('/users', asyncHandler(async (req,res) => {
   const user = req.body;
   if(user.password) {
-    user.password = await bcrypt.hashSync(user.password, 10);
+    user.password = bcrypt.hashSync(user.password, 10);
   }
   await User.create(user);
   res.status(201).location('/').end();
@@ -82,7 +82,6 @@ router.get('/courses/:id', asyncHandler( async (req,res) => {
 }));
 
 router.post('/courses', authenticateUser, asyncHandler( async (req, res) => {
-  console.log(req.body);
   const course = req.body;
   await Course.create(course);
   const newCourse = await Course.findOne({order: [['id', 'DESC']]});

@@ -1,26 +1,25 @@
 import { useNavigate, useParams } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { useContext, useRef } from "react";
+import { api } from "../utils/apiHelper";
 
 const UpdateCourse = ({courses, updateCourse}) => {
   const idString = useParams().id;
   const courseId = parseInt(idString);
-  const {authUser} = useContext(UserContext);
+  const { authUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const course = courses.find(course => course.id === courseId);
-
   const courseTitle = useRef(null);
   const courseDescription = useRef(null);
   const estimatedTime = useRef(null);
   const materialsNeeded = useRef(null);
 
-  console.log(course);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const updatedCourse = {
+      id: course.id,
       userId: authUser.id,
       title: courseTitle.current.value,
       description: courseDescription.current.value,
@@ -30,17 +29,13 @@ const UpdateCourse = ({courses, updateCourse}) => {
 
     // TODO: figure out how to route to the details page -- and how to make manually typing the url work
     try {
-      const response = await api('/courses', 'PUT', updatedCourse);
-      console.log(response)
+      const response = await api(`/courses/${course.id}`, 'PUT', updatedCourse, authUser);
+      const index = courses.indexOf(course);
 
       if (response.status === 204) {
         console.log(`${course.title} has been updated`);
-        updateCourse(courses.map((course, index) => {
-          if (index === courses.indexOf(course)) {
-            return updatedCourse;
-          } ///THIS PROBABLY DOENS'T WORK - FIGURE OUT REPLACING ITEMS IN AN ARRAY
-        }));
-        navigate('/courses');
+        updateCourse(courses.splice(1, 1, updatedCourse));
+
       } else if (response.status === 400) {
           const data = await response.json();
           setErrors(data.errors);
@@ -68,22 +63,22 @@ const UpdateCourse = ({courses, updateCourse}) => {
 
             <div>
               <label htmlFor='courseTitle'>Course Title</label>
-              <input id='courseTitle' name='courseTitle' type='text' defaultValue={course.title} rev={courseTitle} />
+              <input id='courseTitle' name='courseTitle' type='text' defaultValue={course.title} ref={courseTitle} />
 
               <p>By {authUser.firstName} {authUser.lastName}</p>
 
               <label htmlFor='courseDescription'>Course Description</label>
-              <textarea id='courseDescription' name='courseDescription' defaultValue={course.description} rev={courseDescription}></textarea>
+              <textarea id='courseDescription' name='courseDescription' defaultValue={course.description} ref={courseDescription}></textarea>
             </div>
 
             <div>
               <label htmlFor='estimatedTime'>Estimated Time</label>
-              <input id='estimatedTime' name='estimatedTime' type='text' defaultValue={course.estimatedTime} rev={estimatedTime} />
+              <input id='estimatedTime' name='estimatedTime' type='text' defaultValue={course.estimatedTime} ref={estimatedTime} />
 
               <p>By {authUser.firstName} {authUser.lastName}</p>
 
               <label htmlFor='materialsNeeded'>MaterialsNeeded</label>
-              <textarea id='materialsNeeded' name='materialsNeeded' defaultValue={course.materialsNeeded} rev={materialsNeeded}></textarea>
+              <textarea id='materialsNeeded' name='materialsNeeded' defaultValue={course.materialsNeeded} ref={materialsNeeded}></textarea>
             </div>
 
           </div>

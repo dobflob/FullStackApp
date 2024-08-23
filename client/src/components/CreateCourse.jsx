@@ -24,11 +24,9 @@ const CreateCourse = ({courses, addCourse}) => {
       materialsNeeded: materialsNeeded.current.value
     };
 
-
     // TODO: figure out how to route to the details page -- and how to make manually typing the url work
     try {
-      const response = await api('/courses', 'POST', course);
-      console.log(response)
+      const response = await api('/courses', 'POST', course, authUser);
 
       if (response.status === 201) {
         console.log(`${course.title} has been created`);
