@@ -3,39 +3,40 @@ import UserContext from "../contexts/UserContext";
 import { useContext, useRef } from "react";
 import { api } from "../utils/apiHelper";
 
-const UpdateCourse = ({courses, updateCourse}) => {
-  const idString = useParams().id;
-  const courseId = parseInt(idString);
+const UpdateCourse = ({courses, setCourses}) => {
+//TODO: update this component to follow course details -- -only do all the things if course !== null/undefined
   const { authUser } = useContext(UserContext);
   const navigate = useNavigate();
-
+  const courseId = parseInt(useParams().id);
   const course = courses.find(course => course.id === courseId);
-  const courseTitle = useRef(null);
-  const courseDescription = useRef(null);
-  const estimatedTime = useRef(null);
-  const materialsNeeded = useRef(null);
+
+  const courseTitle = useRef();
+  const courseDescription = useRef();
+  const estimatedTime = useRef();
+  const materialsNeeded = useRef();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const updatedCourse = {
-      id: course.id,
-      userId: authUser.id,
-      title: courseTitle.current.value,
-      description: courseDescription.current.value,
-      estimatedTime: estimatedTime.current.value,
-      materialsNeeded: materialsNeeded.current.value
-    };
+  const updatedCourse = {
+    id: course.id,
+    userId: authUser.id,
+    title: courseTitle.current.value,
+    description: courseDescription.current.value,
+    estimatedTime: estimatedTime.current.value,
+    materialsNeeded: materialsNeeded.current.value
+  };
 
-    // TODO: figure out how to route to the details page -- and how to make manually typing the url work
+    // TODO: figure out how to make manually typing the url work
     try {
       const response = await api(`/courses/${course.id}`, 'PUT', updatedCourse, authUser);
-      const index = courses.indexOf(course);
 
       if (response.status === 204) {
         console.log(`${course.title} has been updated`);
-        updateCourse(courses.splice(1, 1, updatedCourse));
-
+        const response = await api('/courses', 'GET', null, null);
+        const data = await response.json();
+        setCourses(data);
+        navigate(`/courses/${course.id}`)
       } else if (response.status === 400) {
           const data = await response.json();
           setErrors(data.errors);
@@ -63,22 +64,22 @@ const UpdateCourse = ({courses, updateCourse}) => {
 
             <div>
               <label htmlFor='courseTitle'>Course Title</label>
-              <input id='courseTitle' name='courseTitle' type='text' defaultValue={course.title} ref={courseTitle} />
+              <input id='courseTitle' name='courseTitle' type='text' ref={courseTitle} defaultValue={course.title}/>
 
               <p>By {authUser.firstName} {authUser.lastName}</p>
 
               <label htmlFor='courseDescription'>Course Description</label>
-              <textarea id='courseDescription' name='courseDescription' defaultValue={course.description} ref={courseDescription}></textarea>
+              <textarea id='courseDescription' name='courseDescription' ref={courseDescription} defaultValue={course.description}></textarea>
             </div>
 
             <div>
               <label htmlFor='estimatedTime'>Estimated Time</label>
-              <input id='estimatedTime' name='estimatedTime' type='text' defaultValue={course.estimatedTime} ref={estimatedTime} />
+              <input id='estimatedTime' name='estimatedTime' type='text' ref={estimatedTime} defaultValue={course.estimatedTime}/>
 
               <p>By {authUser.firstName} {authUser.lastName}</p>
 
               <label htmlFor='materialsNeeded'>MaterialsNeeded</label>
-              <textarea id='materialsNeeded' name='materialsNeeded' defaultValue={course.materialsNeeded} ref={materialsNeeded}></textarea>
+              <textarea id='materialsNeeded' name='materialsNeeded' ref={materialsNeeded} defaultValue={course.materialsNeeded}></textarea>
             </div>
 
           </div>

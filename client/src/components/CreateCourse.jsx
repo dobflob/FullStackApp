@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { api } from "../utils/apiHelper";
 
-const CreateCourse = ({courses, addCourse}) => {
+const CreateCourse = ({courses, setCourses}) => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
   const {authUser} = useContext(UserContext);
@@ -24,14 +24,17 @@ const CreateCourse = ({courses, addCourse}) => {
       materialsNeeded: materialsNeeded.current.value
     };
 
-    // TODO: figure out how to route to the details page -- and how to make manually typing the url work
+    // TODO: figure out how to make manually typing the url work
     try {
       const response = await api('/courses', 'POST', course, authUser);
 
       if (response.status === 201) {
         console.log(`${course.title} has been created`);
-        addCourse([...courses, course]);
-        navigate('/courses');
+        const response = await api('/courses', 'GET', null, null ); // these 3 lines should probably be a re-usable function to get the latest course list
+        const data = await response.json();
+        const newCourse = data.pop();
+        setCourses([...courses, newCourse]);
+        navigate(`/courses/${newCourse.id}`);
       } else if (response.status === 400) {
           const data = await response.json();
           setErrors(data.errors);

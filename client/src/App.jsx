@@ -28,7 +28,6 @@ function App() {
         }
       })
       .catch(err => new Error('Something went wrong', err));
-
       return () => activeFetch = false;
   }, []);
 
@@ -38,10 +37,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate to='/courses'/>}/>
         <Route path='/courses' element={<Courses courses={courses}/>}/>
+        <Route path='/courses/:id' element={<CourseDetails courses={courses} setCourses={setCourses} />}/>
         <Route element={<PrivateRoute />}>
-          <Route path='/courses/:id' element={<CourseDetails courses={courses} deleteCourse={setCourses}/>}/>
-          <Route path='/courses/:id/update' element={<UpdateCourse courses={courses} updateCourse={setCourses}/>}/>
-          <Route path='/createcourse' element={<CreateCourse courses={courses} addCourse={setCourses}/>} />
+
+          <Route path='/courses/:id/update' element={<UpdateCourse courses={courses} setCourses={setCourses}/>}/>
+          <Route path='/createcourse' element={<CreateCourse courses={courses} setCourses={setCourses}/>} />
         </Route>
         <Route path='/signin' element={<UserSignIn />} />
         <Route path='/signup' element={<UserSignUp />} />
