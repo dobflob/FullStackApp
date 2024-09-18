@@ -7,12 +7,11 @@ import { api } from "../utils/apiHelper";
 const UserSignUp = () => {
   const {actions} = useContext(UserContext);
   const navigate = useNavigate();
-
+  const [errors, setErrors] = useState([]);
   const firstName = useRef(null);
   const lastName = useRef(null);
   const emailAddress = useRef(null);
   const password = useRef(null);
-  const [errors, setErrors] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,30 +27,39 @@ const UserSignUp = () => {
       const response = await api('/users', 'POST', user);
 
       if (response.status === 201) {
-        console.log(`${user.emailAddress} is successfully signed up`);
         await actions.signIn(user);
         navigate('/courses');
       } else if (response.status === 400) {
           const data = await response.json();
-          setErrors(data.errors);
+          setErrors(data.errors.map(err => <li key={err}>{err}</li>));
       } else {
-          throw new Error();
+          throw new Error('Sign-up was unsuccessful');
       }
     } catch (error) {
         console.log(error);
-        navigate('/signup');
+        navigate('/error');
     }
   }
 
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate('/signin');
+    navigate('/courses');
   };
 
   return (
     <main>
       <div className='form--centered'>
         <h2>Sign Up</h2>
+        { errors.length ?
+            <div className='validation--errors'>
+              <h3>Validation Errors</h3>
+              <ul>
+                {errors}
+              </ul>
+            </div>
+          : <div></div>
+        }
+
         <form onSubmit={handleSubmit}>
           <label htmlFor='firstName'>First Name</label>
           <input id='firstName' name='firstName' type='text' ref={firstName} />

@@ -1,5 +1,6 @@
 import { useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 import UserContext from "../contexts/UserContext";
 import { api } from "../utils/apiHelper";
 
@@ -24,12 +25,10 @@ const CreateCourse = ({courses, setCourses}) => {
       materialsNeeded: materialsNeeded.current.value
     };
 
-    // TODO: figure out how to make manually typing the url work
     try {
       const response = await api('/courses', 'POST', course, authUser);
 
       if (response.status === 201) {
-        console.log(`${course.title} has been created`);
         const response = await api('/courses', 'GET', null, null ); // these 3 lines should probably be a re-usable function to get the latest course list
         const data = await response.json();
         const newCourse = data.pop();
@@ -37,20 +36,19 @@ const CreateCourse = ({courses, setCourses}) => {
         navigate(`/courses/${newCourse.id}`);
       } else if (response.status === 400) {
           const data = await response.json();
-          setErrors(data.errors);
-          const errorList = errors.map(err => <li>{err}</li>);
-          return errorList;
+          setErrors(data.errors.map(err => <li key={err}>{err}</li>));
       } else {
           throw new Error();
       }
     } catch (error) {
       console.log(error);
+      navigate('/error');
     }
   }
 
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate('/'); //want to change to use location so we can go back to where we came from
+    navigate('/');
   }
 
   return (
@@ -61,12 +59,11 @@ const CreateCourse = ({courses, setCourses}) => {
             <div className='validation--errors'>
               <h3>Validation Errors</h3>
               <ul>
-                {errorList}
+                {errors}
               </ul>
             </div>
           : <div></div>
           }
-
 
           <form onSubmit={handleSubmit}>
             <div className='main--flex'>
@@ -97,6 +94,11 @@ const CreateCourse = ({courses, setCourses}) => {
         </div>
     </main>
   )
+};
+
+CreateCourse.propTypes = {
+  courses: PropTypes.array,
+  setCourses: PropTypes.func
 };
 
 export default CreateCourse;

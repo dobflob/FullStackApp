@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 const Courses = ({courses}) => {
 
@@ -26,6 +27,10 @@ const Courses = ({courses}) => {
       </div>
     </main>
   );
+};
+
+Courses.propTypes = {
+  courses: PropTypes.array
 };
 
 export default Courses;

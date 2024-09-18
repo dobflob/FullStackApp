@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import Cookies from "js-cookie";
+import PropTypes from 'prop-types';
 import { api } from "../utils/apiHelper";
 
 const UserContext = createContext(null);
@@ -40,6 +41,10 @@ export const UserProvider = (props) => {
       {props.children}
     </UserContext.Provider>
   );
+};
+
+UserProvider.propTypes = {
+  children: PropTypes.node
 };
 
 export default UserContext;

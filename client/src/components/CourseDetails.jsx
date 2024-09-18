@@ -1,6 +1,7 @@
-import { Link, useParams, useNavigate, Navigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { api } from "../utils/apiHelper";
 import { useContext, useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import Markdown from 'react-markdown'
 import UserContext from "../contexts/UserContext";
 
@@ -16,13 +17,19 @@ const CourseDetails = ({courses, setCourses}) => {
     api(`/courses/${courseId}`, 'GET', null, null)
         .then(res => res.json())
         .then(data => {
-          if(activeFetch)
+          if(activeFetch && data.id) {
             setCourse(data)
+          } else if (data.message) {
+            navigate('/notfound');
+          }
         })
-        .catch(err => new Error('Something went wrong', err));
+        .catch(err => {
+          navigate('/error');
+          throw new Error('Something went wrong', err);
+        });
         return () => activeFetch = false;
 
-  }, []);
+  }, [courseId, navigate]);
 
   if (course) {
     const handleDelete = async (event) => {
@@ -32,17 +39,17 @@ const CourseDetails = ({courses, setCourses}) => {
         const response = await api(`/courses/${course.id}`, 'DELETE', null, authUser);
 
         if (response.status === 204) {
-          console.log(`${course.title} has been deleted`);
           const updatedCourses = courses.filter(course => course.id !== courseId);
           setCourses(updatedCourses);
           navigate('/');
         } else if (response.status === 403) {
-            console.log('403');
+            navigate('/forbidden');
         } else {
             throw new Error();
         }
       } catch (error) {
         console.log(error);
+        navigate('/error');
       }
     }
 
@@ -82,10 +89,9 @@ const CourseDetails = ({courses, setCourses}) => {
             </form>
           </div>
         </main>
-
-      )
+      );
   } else {
-    //currently will get stuck on loading if you ask for an id that doesn't exist... need to set up not found route
+
     return (
       <main>
         <div className='wrap'>
@@ -94,29 +100,11 @@ const CourseDetails = ({courses, setCourses}) => {
       </main>
     )
   }
+};
 
-
-
-/* useEffect(() => {
-  let activeFetch = true;
-
-    api(`/courses/${courseId}`, 'GET', null, null)
-      .then(res => res.json())
-      .then(data => {
-
-        if(activeFetch) {
-          setCourse(data)
-        }
-      })
-      .catch(err => new Error('Something went wrong', err));
-      return () => activeFetch = false;
-}, [courseId]); */
-
-// TODO: add a helper function that takes a string and creates and array. if the last item in the array is blank, pop it off. if materials, replace '* ' with ''  -- also may need to look up closure when assigning keys so I don't have to use global variables
-
-// TODO: after the above to do, go back and refactor to user react-markdown which is likely overkill for this project but teaches us more about using libraries and reading documentation. may try hand at creating your own little package that formats markdown???
-
-
+CourseDetails.propTypes = {
+  courses: PropTypes.array,
+  setCourses: PropTypes.func
 };
 
 
