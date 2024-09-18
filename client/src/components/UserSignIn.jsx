@@ -1,8 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRef, useContext, useState } from "react";
-
 import UserContext from "../contexts/UserContext";
 
+/**
+ * UserSignIn allows the user to enter their credentials and sign into the app
+ * When a user submits the form, the handleSubmit function is called
+ * When a user clicks cancel, the handleCancel function is called and the user is returned to the courses page
+ * @returns html for the sign in form
+ */
 const UserSignIn = () => {
   const {actions} = useContext(UserContext);
   const navigate = useNavigate();
@@ -11,6 +16,12 @@ const UserSignIn = () => {
   const emailAddress = useRef(null);
   const password = useRef(null);
 
+  /**
+   * handleSubmit() checks to see if there is a location stored to set the 'from' variable
+   * uses the signIn function from the userContext to check the entered credentials
+   * If the user is an existing user, they're routed back to their previous location (if one exists) or to the courses page
+   * @param {*} event
+  */
   const handleSubmit = async (event) => {
     event.preventDefault();
     let from = location.state? location.state.from : '/courses';
@@ -47,6 +58,10 @@ const UserSignIn = () => {
     }
   }
 
+  /**
+   * handleCancel() navigates user back to the course list
+   * @param {*} event
+  */
   const handleCancel = (event) => {
     event.preventDefault();
     navigate('/');

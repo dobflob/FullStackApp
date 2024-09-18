@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
+/**
+ * Courses takes in the courses global state as a prop and maps the courses to the html for each course card
+ * once each course is mapped to the html, renders the course list to the page and the new course button after the last course in the list
+ * @param {*} props.courses
+ * @returns html for the course list
+ */
 const Courses = ({courses}) => {
 
   const courseList = courses.map(course => {

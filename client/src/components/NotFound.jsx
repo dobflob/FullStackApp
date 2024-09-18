@@ -1,3 +1,7 @@
+/**
+ * NotFound is a resuable component used when a requested course doesn't exist or the user has navigated to a route that doesn't exist
+ * @returns html for the not found message
+ */
 const NotFound = () => {
   return (
     <main>

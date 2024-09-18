@@ -4,8 +4,19 @@ import { useContext, useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { api } from "../utils/apiHelper";
 
+/**
+ * UpdateCourse takes in the courses global state and setCourses as props
+ * When the component loads, the useEffect hook uses the apiHelper to make a GET request for the specific course using the courseId as a param
+ * If the request returns course data, it sets the course state to the returned data
+ * If the request returns a message instead of course data, it navigates the user to the notfound route
+ * If the server returns a 500 error, it navigates users to the error route
+ * When a user submits the form, the handleSubmit function is called
+ * When a user clicks cancel, the handleCancel function is called
+ * @param {*} props.courses
+ * @param {*} props.setCourses
+ * @returns html for the update course form or 'loading' text if request data hasn't returned yet
+ */
 const UpdateCourse = ({setCourses}) => {
-
   const { authUser } = useContext(UserContext);
   const navigate = useNavigate();
   const courseId = parseInt(useParams().id);
@@ -17,7 +28,6 @@ const UpdateCourse = ({setCourses}) => {
 
   useEffect(() => {
     let activeFetch = true;
-
     api(`/courses/${courseId}`, 'GET', null, null)
         .then(res => res.json())
         .then(data => {
@@ -36,16 +46,26 @@ const UpdateCourse = ({setCourses}) => {
           throw new Error('Something went wrong', err);
         });
         return () => activeFetch = false;
-
   }, [authUser.id, courseId, navigate]);
 
   if (course) {
-
+  /**
+     * handleCancel() navigates user back to the course details
+     * @param {*} event
+  */
     const handleCancel = (event) => {
       event.preventDefault();
       navigate(`/courses/${course.id}`);
     }
 
+  /**
+     * handleSubmit() makes a PUT request sending the courseId of the course to delete as well as the authUser information
+     * Update button only shows to the user who created the course; the PUT request will fail server side if the userId doesn't match the authUser.id
+     * Updates the course in the database if the user is authorized to update the course
+     * Navigates user to forbidden if user is not authorized
+     * Navigates user to global error route if 500 thrown
+     * @param {*} event
+  */
     const handleSubmit = async (event) => {
       event.preventDefault();
 

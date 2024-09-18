@@ -4,6 +4,16 @@ import PropTypes from 'prop-types';
 import UserContext from "../contexts/UserContext";
 import { api } from "../utils/apiHelper";
 
+
+/**
+ * CreateCourse takes in the courses global state and setCourses as props
+ * When a user submits the form, the handleSubmit function is called
+ * When a user clicks cancel, the handleCancel function is called
+ * The component uses the courses and setCourses props to update the courses state when a user successfully creates a course
+ * @param {*} props.courses
+ * @param {*} props.setCourses
+ * @returns html for the create course form
+ */
 const CreateCourse = ({courses, setCourses}) => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
@@ -14,6 +24,14 @@ const CreateCourse = ({courses, setCourses}) => {
   const estimatedTime = useRef(null);
   const materialsNeeded = useRef(null);
 
+/**
+   * handleSubmit() makes a POST request sending the courseId of the course to delete as well as the authUser information
+   * The POST request will fail server side if the userId doesn't match the authUser.id
+   * Creates the course in the database if the user is authorized to create a course
+   * Navigates user to forbidden if user is not authorized
+   * Navigates user to global error route if 500 thrown
+   * @param {*} event
+*/
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -46,6 +64,10 @@ const CreateCourse = ({courses, setCourses}) => {
     }
   }
 
+/**
+   * handleCancel() navigates user back to the course details
+   * @param {*} event
+*/
   const handleCancel = (event) => {
     event.preventDefault();
     navigate('/');

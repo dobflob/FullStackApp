@@ -19,6 +19,12 @@ function App() {
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
 
+/**
+   * useEffect hook makes async GET request for all courses
+   * then formats response as json
+   * then if it's the active fetch, sets the courses state to the response data
+   * If there's a server error with the request, navigates user to the error route
+*/
   useEffect(() => {
     let activeFetch = true;
     api('/courses', 'GET', null, null)

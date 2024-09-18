@@ -1,3 +1,7 @@
+/**
+ * UnhandledError is a resuable component displayed when the server returns a 500 error
+ * @returns html for the unexpected error message
+ */
 const UnhandledError = () => {
   return (
     <main>

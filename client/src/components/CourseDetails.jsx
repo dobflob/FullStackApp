@@ -5,6 +5,17 @@ import PropTypes from 'prop-types';
 import Markdown from 'react-markdown'
 import UserContext from "../contexts/UserContext";
 
+/**
+ * CourseDetails takes in the courses global state and setCourses as props
+ * When the component loads, the useEffect hook uses the apiHelper to make a GET request for the specific course using the courseId as a param
+ * If the request returns course data, it sets the course state to the returned data
+ * If the request returns a message instead of course data, it navigates the user to the notfound route
+ * If the server returns a 500 error, it navigates users to the error route
+ * If the course belongs to the current user, the page displays an Update and Delete button in addition to the Return to List link
+ * @param {*} props.courses
+ * @param {*} props.setCourses
+ * @returns html for the course details or 'loading' text if request data hasn't returned yet
+ */
 const CourseDetails = ({courses, setCourses}) => {
   const navigate = useNavigate();
   const {authUser} = useContext(UserContext);
@@ -13,7 +24,6 @@ const CourseDetails = ({courses, setCourses}) => {
 
   useEffect(() => {
     let activeFetch = true;
-
     api(`/courses/${courseId}`, 'GET', null, null)
         .then(res => res.json())
         .then(data => {
@@ -28,10 +38,17 @@ const CourseDetails = ({courses, setCourses}) => {
           throw new Error('Something went wrong', err);
         });
         return () => activeFetch = false;
-
   }, [courseId, navigate]);
 
   if (course) {
+  /**
+     * handleDelete() makes a DELETE request sending the courseId of the course to delete as well as the authUser information
+     * Delete button only shows to the user who created the course; the Delete request will fail server side if the userId doesn't match the authUser.id
+     * Removes the course from the database if the user is authorized to delete the course
+     * Navigates user to forbidden if user is not authorized
+     * Navigates user to global error route if 500 thrown
+     * @param {*} event
+  */
     const handleDelete = async (event) => {
       event.preventDefault();
 
@@ -106,6 +123,5 @@ CourseDetails.propTypes = {
   courses: PropTypes.array,
   setCourses: PropTypes.func
 };
-
 
 export default CourseDetails;
