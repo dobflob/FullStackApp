@@ -53,7 +53,7 @@ router.get('/courses', asyncHandler( async (req,res) => {
     res.status(200).json(courses);
 }));
 
-router.get('/courses/:id', asyncHandler( async (req,res) => {
+router.get('/courses/:id', asyncHandler( async (req,res,next) => {
   const course = await Course.findOne({
     where: {
       id: req.params.id,
@@ -78,7 +78,12 @@ router.get('/courses/:id', asyncHandler( async (req,res) => {
       }
     ]
   });
-  res.status(200).json(course);
+
+  if(course) {
+    res.status(200).json(course);
+  } else {
+    next();
+  }
 }));
 
 router.post('/courses', authenticateUser, asyncHandler( async (req, res) => {

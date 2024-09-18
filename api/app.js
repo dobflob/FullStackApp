@@ -7,11 +7,6 @@ const morgan = require('morgan');
 const { sequelize } = require('./models');
 const routes = require('./routes');
 
-/* const corsOptions = {
-  origin: 'http://localhost:5173',
-  optionsSuccessStatus: 204
-} */
-
 (async () => {
   try {
     await sequelize.authenticate();
