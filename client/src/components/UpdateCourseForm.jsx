@@ -21,6 +21,7 @@ const UpdateCourse = ({setCourses}) => {
   const navigate = useNavigate();
   const courseId = parseInt(useParams().id);
   const [course, setCourse] = useState(null);
+  const [errors, setErrors] = useState([]);
   const courseTitle = useRef();
   const courseDescription = useRef();
   const estimatedTime = useRef();
@@ -88,9 +89,7 @@ const UpdateCourse = ({setCourses}) => {
           navigate(`/courses/${course.id}`)
         } else if (response.status === 400) {
             const data = await response.json();
-            const errors = data.errors;
-            const errorList = errors.map(err => <li key={err}>{err}</li>);
-            return errorList;
+            setErrors(data.errors.map(err => <li key={err}>{err}</li>));
         } else {
             throw new Error();
         }
@@ -104,6 +103,16 @@ const UpdateCourse = ({setCourses}) => {
       <main>
         <div className='wrap'>
           <h2>Update Course</h2>
+          { errors.length ?
+            <div className='validation--errors'>
+              <h3>Validation Errors</h3>
+              <ul>
+                {errors}
+              </ul>
+            </div>
+          : <div></div>
+          }
+
           <form onSubmit={handleSubmit}>
             <div className='main--flex'>
 
